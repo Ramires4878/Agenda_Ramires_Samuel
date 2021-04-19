@@ -51,7 +51,55 @@ namespace AgendaGit.Controllers
 
         public IActionResult Index()
         {
+            return View(Agendas);
+        }
+
+        public IActionResult Create()
+        {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public IActionResult Create(AgendaPessoal P)
+        {
+            P.AgendaID = Agendas.Select(ID => ID.AgendaID).Max() + 1;
+            Agendas.Add(P);
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Edit(long id)
+        {
+            return View(Agendas.Where(ID => ID.AgendaID == id).FirstOrDefault());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public IActionResult Edit(AgendaPessoal P)
+        {
+            Agendas.Remove(Agendas.Where(ID => ID.AgendaID == P.AgendaID).First());
+            Agendas.Add(P);
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Details(long id)
+        {
+            return View(Agendas.Where(ID => ID.AgendaID == id).First());
+        }
+
+        public IActionResult Delete(long id)
+        {
+            return View(Agendas.Where(ID => ID.AgendaID == id).First());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(AgendaPessoal P)
+        {
+            Agendas.Remove(Agendas.Where(ID => ID.AgendaID == P.AgendaID).FirstOrDefault());
+            return RedirectToAction("Index");
         }
     }
 }
